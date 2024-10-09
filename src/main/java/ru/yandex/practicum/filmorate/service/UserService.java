@@ -24,7 +24,7 @@ public class UserService {
     public User addFriend(long id, long friendId) {
         User user = userStorage.getUserById(id);
         User friend = userStorage.getUserById(friendId);
-        if (user.getFriendsList().contains(friendId)){
+        if (user.getFriendsList().contains(friendId)) {
             log.error("Пользователь с ID {} уже добавлен в друзья", friendId);
             throw new ValidateException("Пользователь с ID " + friendId + " уже добавлен в друзья");
         }
@@ -37,7 +37,7 @@ public class UserService {
     public User deleteFriend(Long id, Long friendId) {
         User user = userStorage.getUserById(id);
         User friend = userStorage.getUserById(friendId);
-        if (user.getFriendsList().contains(friendId)){
+        if (user.getFriendsList().contains(friendId)) {
             user.getFriendsList().remove(friendId);
             friend.getFriendsList().remove(id);
         }

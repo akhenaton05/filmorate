@@ -44,8 +44,8 @@ public class FilmService {
 
     public Collection<Film> getPopularList(Optional<Integer> count) {
         return count.map(integer -> filmStorage.showAll().stream()
-                .sorted((o1, o2) -> o2.getLikesCount() - o1.getLikesCount())
-                .limit(integer).toList())
+                        .sorted((o1, o2) -> o2.getLikesCount() - o1.getLikesCount())
+                        .limit(integer).toList())
                 .orElseGet(() -> filmStorage.showAll().stream()
                         .limit(10).toList());
     }

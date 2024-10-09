@@ -22,7 +22,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User showUserById(Long id) {
-        if (!users.containsKey(id)){
+        if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователя с ID " + id + " нету");
         }
         log.info("Пользователь c ID {} найден", id);
@@ -86,7 +86,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User getUserById(Long id) {
-        if (users.containsKey(id)){
+        if (users.containsKey(id)) {
             return users.get(id);
         }
         throw new NotFoundException("Юзера с ID " + id + " несуществует");
