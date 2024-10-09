@@ -54,7 +54,7 @@ public class UserControllerTests {
 
     @Test
     void addingUser() throws Exception {
-        User user = new User(0L,"e@mail", "LOGIN", "Name", LocalDate.of(2000,10,10));
+        User user = new User(0L,"e@mail", "LOGIN", "Name", LocalDate.of(2000,10,10), null, null);
 
         String json = objectMapper.writeValueAsString(user);
 
@@ -78,7 +78,7 @@ public class UserControllerTests {
 
     @Test
     void addingEmptyLoginUser() throws Exception {
-        User user = new User(0L,null, null, null, LocalDate.of(2000,10,10));
+        User user = new User(0L,null, null, null, LocalDate.of(2000,10,10), null, null);
 
         String json = objectMapper.writeValueAsString(user);
 
@@ -90,19 +90,19 @@ public class UserControllerTests {
 
     @Test
     void addingEmptyButLoginUser() throws Exception {
-        User user = new User(0L,null, "dsa", null, LocalDate.of(2000,10,10));
+        User user = new User(0L,null, "dsa", null, LocalDate.of(2000,10,10), null, null);
 
         String json = objectMapper.writeValueAsString(user);
 
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     void addingIncorrectEmailTest() throws Exception {
-        User user = new User(0L,"dsabjk?Dsa@", "dsa", "dsadsa", LocalDate.of(2000,10,10));
+        User user = new User(0L,"dsabjk?Dsa@", "dsa", "dsadsa", LocalDate.of(2000,10,10), null, null);
 
         String json = objectMapper.writeValueAsString(user);
 
@@ -114,7 +114,7 @@ public class UserControllerTests {
 
     @Test
     void updatingUser() throws Exception {
-        User user = new User(0L,"e@mail",  "LOGIN","Name", LocalDate.of(2000,10,10));
+        User user = new User(0L,"e@mail",  "LOGIN","Name", LocalDate.of(2000,10,10), null, null);
         String oldJson = objectMapper.writeValueAsString(user);
 
         mvc.perform(post("/users")
@@ -122,7 +122,7 @@ public class UserControllerTests {
                         .content(oldJson))
                 .andExpect(status().isOk());
 
-        User user2 = new User(1L,"e@mail2",  "LOGIN2","Name2", LocalDate.of(2022,11,11));
+        User user2 = new User(1L,"e@mail2",  "LOGIN2","Name2", LocalDate.of(2022,11,11), null, null);
         String json2 = objectMapper.writeValueAsString(user2);
 
         mvc.perform(put("/users")
