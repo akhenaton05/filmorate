@@ -56,7 +56,7 @@ public class FilmControllerTests {
 
     @Test
     void addingFilm() throws Exception {
-        Film film = new Film(0L,"Name", "Description", LocalDate.of(2000,10,10), Duration.ofSeconds(190));
+        Film film = new Film(0L,"Name", "Description", LocalDate.of(2000,10,10), Duration.ofSeconds(190), 0);
 
         String json = objectMapper.writeValueAsString(film);
 
@@ -80,19 +80,19 @@ public class FilmControllerTests {
 
     @Test
     void addingEmptyFilm() throws Exception {
-        Film film = new Film(0L,"321", "", null, null);
+        Film film = new Film(0L,"321", "", null, null, 0);
 
         String json = objectMapper.writeValueAsString(film);
 
         mvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
     void addingEmptyNameFilm() throws Exception {
-        Film film = new Film(0L,null, "Dsa", null, Duration.ZERO);
+        Film film = new Film(0L,null, "Dsa", null, Duration.ZERO, 0);
 
         String json = objectMapper.writeValueAsString(film);
 
@@ -104,7 +104,7 @@ public class FilmControllerTests {
 
     @Test
     void updatingFilm() throws Exception {
-        Film oldFilm = new Film(0L,"Name", "Description", LocalDate.of(2000,10,10), Duration.ofSeconds(190));
+        Film oldFilm = new Film(0L,"Name", "Description", LocalDate.of(2000,10,10), Duration.ofSeconds(190), 0);
         String oldJson = objectMapper.writeValueAsString(oldFilm);
 
         mvc.perform(post("/films")
@@ -112,7 +112,7 @@ public class FilmControllerTests {
                         .content(oldJson))
                 .andExpect(status().isOk());
 
-        Film film2 = new Film(1L,"Name2", "Description2", LocalDate.of(2022,12,12), Duration.ofSeconds(22));
+        Film film2 = new Film(1L,"Name2", "Description2", LocalDate.of(2022,12,12), Duration.ofSeconds(22), 0);
         String json2 = objectMapper.writeValueAsString(film2);
 
         mvc.perform(put("/films")

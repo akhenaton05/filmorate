@@ -1,69 +1,65 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.controller.utils.UserUtils;
-import ru.yandex.practicum.filmorate.exception.ValidateException;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 
 @RestController
+@Component
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private InMemoryUserStorage userStorage;
+    private UserService userService;
 
     @Autowired
-    private UserUtils userUtils;
+    public UserController(InMemoryUserStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
+        this.userService = userService;
+    }
 
     @GetMapping
     public Collection<User> showAll() {
-        return userUtils.getUsers().values();
+        return userStorage.showAll();
+    }
+
+    @GetMapping("/{id}")
+    public User showUserById(@PathVariable Long id) {
+        return userStorage.showUserById(id);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> showAllFriends(@PathVariable Long id) {
+        return userService.showAllFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> showAllMutualFriends(@PathVariable Long id, @PathVariable Long otherId) {
+        return userService.showAllMutualFriends(id, otherId);
     }
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-        User newUser;
-        try {
-            newUser = userUtils.checkUser(user);
-        } catch (ValidateException e) {
-            log.error(e.getMessage());
-            throw e;
-        }
-        newUser.setId(userUtils.getNextId());
-        userUtils.getUsers().put(newUser.getId(), newUser);
-        log.info("Пользователь {} был успешно добавлен", newUser);
-        return newUser;
+        return userStorage.addUser(user);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable long id, @PathVariable long friendId) {
+        return userService.addFriend(id, friendId);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        User updatedUser;
-        try {
-            updatedUser = userUtils.checkUser(user);
-        } catch (ValidateException e) {
-            log.error(e.getMessage());
-            throw e;
-        }
-        if (updatedUser.getId() == null) {
-            throw new ValidateException("ID пользователя должен быть указан");
-        }
-        if (userUtils.getUsers().containsKey(updatedUser.getId())) {
-            User oldUser = userUtils.getUsers().get(updatedUser.getId());
-            if (oldUser.equals(updatedUser)) {
-                log.info("Обновляемые данные идентичны старым");
-                return oldUser;
-            }
-            oldUser.setName(updatedUser.getName());
-            oldUser.setEmail(updatedUser.getEmail());
-            oldUser.setLogin(updatedUser.getLogin());
-            oldUser.setBirthday(updatedUser.getBirthday());
-            log.info("Пользователь {} был успешно обновлен", oldUser);
-            return oldUser;
-        }
-        throw new ValidateException("User с ID " + updatedUser.getId() + " не найден");
+        return userStorage.updateUser(user);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        return userService.deleteFriend(id, friendId);
     }
 }

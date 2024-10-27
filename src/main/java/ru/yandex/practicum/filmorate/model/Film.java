@@ -19,4 +19,5 @@ public class Film {
     private LocalDate releaseDate;
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     private Duration duration;
+    private int likesCount;
 }
