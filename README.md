@@ -50,6 +50,7 @@
 `JOIN rating_name AS r ON f.filmID = r.filmID;`
 
 
+
 ### [Ссылка на ER - диаграмму](https://app.quickdatabasediagrams.com/#/d/SdUQq8)
 
 
