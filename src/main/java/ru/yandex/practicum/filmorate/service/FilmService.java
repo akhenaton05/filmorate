@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmRepositories.*;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
     private static final Logger log = LoggerFactory.getLogger(FilmService.class);
     private final FilmRepository filmRepository;
@@ -34,16 +34,6 @@ public class FilmService {
     private final GenresRepository genresRepository;
     private final UserService userService;
     private final LikesRepository likesRepository;
-
-    @Autowired
-    public FilmService(@Qualifier("FilmRepository") FilmRepository filmRepository, MpaRepository mpaRepository, FilmsGenresRepository filmsGenresRepository, GenresRepository genresRepository, UserService userService, LikesRepository likesRepository) {
-        this.filmRepository = filmRepository;
-        this.mpaRepository = mpaRepository;
-        this.filmsGenresRepository = filmsGenresRepository;
-        this.genresRepository = genresRepository;
-        this.userService = userService;
-        this.likesRepository = likesRepository;
-    }
 
     public List<FilmDto> getFilms() {
         return filmRepository.findAll()

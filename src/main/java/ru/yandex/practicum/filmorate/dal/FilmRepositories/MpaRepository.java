@@ -9,20 +9,19 @@ import ru.yandex.practicum.filmorate.model.utils.Mpa;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.yandex.practicum.filmorate.dal.FilmRepositories.requests.MpaRequests.*;
+
 @Repository
 public class MpaRepository extends BaseRepository<Mpa> {
-    private static final String FIND_ALL_QUERY = "SELECT * FROM rating";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM rating WHERE id = ?";
-
     public MpaRepository(JdbcTemplate jdbc, RowMapper<Mpa> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Mpa> findAll() {
-        return findMany(FIND_ALL_QUERY);
+        return findMany(FIND_ALL_QUERY.query);
     }
 
     public Optional<Mpa> findById(long id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+        return findOne(FIND_BY_ID_QUERY.query, id);
     }
 }

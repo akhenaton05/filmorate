@@ -10,28 +10,20 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.yandex.practicum.filmorate.dal.FilmRepositories.requests.FilmRequests.*;
+
 @Repository("FilmRepository")
 public class FilmRepository extends BaseRepository<Film> {
-    private static final String FIND_ALL_QUERY = "SELECT * FROM films";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
-    private static final String INSERT_QUERY = "INSERT INTO films (name, description, release_date, duration, likes_count, rating_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, likes_count = ?, rating_id = ? " +
-            "WHERE id = ?";
-    private static final String DELETE_BY_ID_QUERY = "DELETE FROM films WHERE id = ?";
-    private static final String POPULAR_FILM_QUERY = "SELECT * FROM films f JOIN (SELECT film_id, COUNT(user_id) AS like_count" +
-            " FROM users_likes GROUP BY film_id ORDER BY like_count DESC) l ON f.id=l.film_id LIMIT ?";
-
     public FilmRepository(JdbcTemplate jdbc, RowMapper<Film> mapper) {
         super(jdbc, mapper);
     }
 
     public List<Film> findAll() {
-        return findMany(FIND_ALL_QUERY);
+        return findMany(FIND_ALL_QUERY.query);
     }
 
     public Optional<Film> findById(long filmId) {
-        return findOne(FIND_BY_ID_QUERY, filmId);
+        return findOne(FIND_BY_ID_QUERY.query, filmId);
     }
 
     public Film save(Film film) {
@@ -40,7 +32,7 @@ public class FilmRepository extends BaseRepository<Film> {
             rating = film.getMpa().getId();
         }
         long id = insert(
-                INSERT_QUERY,
+                INSERT_QUERY.query,
                 film.getName(),
                 film.getDescription(),
                 Date.valueOf(film.getReleaseDate()),
@@ -58,7 +50,7 @@ public class FilmRepository extends BaseRepository<Film> {
             rating = film.getMpa().getId();
         }
         update(
-                UPDATE_QUERY,
+                UPDATE_QUERY.query,
                 film.getName(),
                 film.getDescription(),
                 Date.valueOf(film.getReleaseDate()),
@@ -71,10 +63,10 @@ public class FilmRepository extends BaseRepository<Film> {
     }
 
     public boolean delete(long filmId) {
-        return delete(DELETE_BY_ID_QUERY, filmId);
+        return delete(DELETE_BY_ID_QUERY.query, filmId);
     }
 
     public List<Film> findPopularFilm(String count) {
-        return findMany(POPULAR_FILM_QUERY, Integer.parseInt(count));
+        return findMany(POPULAR_FILM_QUERY.query, Integer.parseInt(count));
     }
 }
