@@ -1,9 +1,7 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import ru.yandex.practicum.filmorate.model.utils.Genres;
 import ru.yandex.practicum.filmorate.model.utils.Mpa;
 
@@ -11,16 +9,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Film {
+public class FilmDto {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
-    @NotNull
-    @NotBlank
     private String name;
     private String description;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate releaseDate;
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     private Integer duration;
     private int rate;
     private List<Genres> genres;
