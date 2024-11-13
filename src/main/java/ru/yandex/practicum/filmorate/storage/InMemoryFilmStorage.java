@@ -79,7 +79,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidateException("Дата релиза не должна быть позже 28 декабря 1895 года ");
         }
-        if (!(film.getDuration()>0)) {
+        if (!(film.getDuration() > 0)) {
             throw new ValidateException("Продолжительность должна положительным числом");
         }
         return film;
